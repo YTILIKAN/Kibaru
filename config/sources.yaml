@@ -1,13 +1,21 @@
 # Sources d'actualités tech africaines
 sources:
-  # Médias tech africains
   - name: TechCabal
-    url: https://techcabal.com
-    type: rss
-  - name: Disrupt Africa
-    url: https://disrupt-africa.com
-    type: rss
+    url: https://techcabal.com/feed/
+    lang: en
+    region: Nigeria / Pan-Afrique
+
   - name: Techpoint Africa
-    url: https://techpoint.africa
-    type: rss
-  # À compléter avec les sources francophones
+    url: https://techpoint.africa/feed/
+    lang: en
+    region: Nigeria
+
+  - name: WeeTracker
+    url: https://weetracker.com/feed/
+    lang: en
+    region: Afrique de l'Est
+
+  - name: Agence Ecofin
+    url: https://www.agenceecofin.com/feed/rss
+    lang: fr
+    region: Pan-Afrique francophone
