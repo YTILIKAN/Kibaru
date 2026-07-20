@@ -1,0 +1,13 @@
+# Sources d'actualités tech africaines
+sources:
+  # Médias tech africains
+  - name: TechCabal
+    url: https://techcabal.com
+    type: rss
+  - name: Disrupt Africa
+    url: https://disrupt-africa.com
+    type: rss
+  - name: Techpoint Africa
+    url: https://techpoint.africa
+    type: rss
+  # À compléter avec les sources francophones
