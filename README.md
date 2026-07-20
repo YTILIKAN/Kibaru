@@ -2,7 +2,9 @@
 
 **Agrégateur automatique d'actualités tech africaines.**
 
-Kibaru scrape, traduit et clusterise les actualités technologiques du continent africain. C'est le complément automatique d'[AfroTech-Pulse](https://github.com/YTILIKAN/AfroTech-Pulse) : AfroTech-Pulse apporte la curation éditoriale, Kibaru fournit le flux brut et exhaustif.
+**[ytilikan.github.io/Kibaru](https://ytilikan.github.io/Kibaru/)** (live)
+
+Kibaru scrape les actualités technologiques du continent africain depuis 4 sources (TechCabal, Techpoint Africa, WeeTracker, Agence Ecofin) et les affiche sur une page web légère. C'est le complément automatique d'[AfroTech-Pulse](https://github.com/YTILIKAN/AfroTech-Pulse) : AfroTech-Pulse apporte la curation éditoriale, Kibaru fournit le flux brut et exhaustif.
 
 *Kibaru* = information / nouvelle en bambara.
 
@@ -15,28 +17,24 @@ Centraliser l'information tech africaine dispersée sur des centaines de sources
 ```
 Kibaru/
 ├── src/
-│   ├── kibaru/
-│   │   ├── __init__.py
-│   │   ├── scraper.py        # Scraping multi-sources
-│   │   ├── clusterer.py      # Clustering par thème (TF-IDF + embeddings)
-│   │   ├── translator.py     # Traduction automatique (via Tondo/NLLB)
-│   │   ├── feeder.py         # Pipeline principal (scrape → cluster → stocke)
-│   │   └── api.py            # API REST FastAPI
-│   └── dashboard/            # Frontend Next.js
+│   └── kibaru/
+│       ├── __init__.py
+│       ├── scraper.py        # RSS multi-sources (4 flux, normalisation)
+│       ├── feeder.py         # Pipeline: scrape → JSON + HTML
+│       └── api.py            # API REST FastAPI (à venir)
 ├── config/
-│   └── sources.yaml          # Liste des sources à scraper
-├── tests/
+│   └── sources.yaml          # Sources RSS
+├── output/                   # Généré: feed.json + index.html
 ├── requirements.txt
 └── README.md
 ```
 
 ## Stack
 
-- **Backend** : Python, FastAPI, PostgreSQL
-- **Scraping** : httpx + BeautifulSoup / Playwright
-- **NLP** : sentence-transformers (clustering), NLLB (traduction)
-- **Frontend** : Next.js (dashboard filtrable)
-- **Orchestration** : cron / GitHub Actions
+- **Scraping** : Python, feedparser
+- **Sortie** : JSON + HTML statique autonome
+- **Hébergement** : GitHub Pages (branche `gh-pages`)
+- **À venir** : FastAPI, clustering, traduction, dashboard Next.js
 
 ## Sources cibles (phase 1)
 
@@ -50,12 +48,13 @@ Kibaru/
 ```bash
 git clone https://github.com/YTILIKAN/Kibaru.git
 cd Kibaru
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+pip install feedparser
 
-# Lancer un scrape de test
-python -m kibaru.feeder --dry-run
+# Lancer le scraper (génère output/feed.json + output/index.html)
+PYTHONPATH=src python3 -m kibaru.feeder
 ```
+
+Le site live est déployé sur GitHub Pages depuis la branche `gh-pages`.
 
 ## Contribuer
 
