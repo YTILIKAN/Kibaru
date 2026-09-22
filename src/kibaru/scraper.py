@@ -3,10 +3,19 @@
 import hashlib
 import json
 import re
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 import feedparser
+
+# Certains sites (Techpoint, WeeTracker) bloquent l'User-Agent par défaut de
+# feedparser via Cloudflare (403 / 522). On utilise un UA de navigateur pour
+# passer les protections Cloudflare.
+feedparser.USER_AGENT = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+)
 
 
 def strip_html(text: str) -> str:
@@ -33,6 +42,17 @@ SOURCES = [
 def fetch_feed(source: dict) -> list[dict]:
     """Fetch un flux RSS et retourne les articles normalisés."""
     feed = feedparser.parse(source["url"])
+    # Réessaie une fois en cas de réponse vide/transitoire (ex. Cloudflare).
+    if not feed.entries and not (getattr(feed, "status", None) == 200 and not feed.bozo):
+        time.sleep(2)
+        feed = feedparser.parse(source["url"])
+
+    if not feed.entries:
+        print(
+            f"    [AVERT] {source['name']}: statut HTTP {getattr(feed, 'status', '?')}"
+            f" / bozo={feed.bozo}"
+        )
+
     articles = []
 
     for entry in feed.entries:
